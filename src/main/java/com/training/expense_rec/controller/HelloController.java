@@ -13,9 +13,9 @@ public class HelloController {
     return "Hello, world (public)";
   }
   
-  @GetMapping("/public/akshata")
+  @GetMapping("/public/sagar")
   public String publicAkshata() {
-    return "Hello, Akshata";
+    return "Hello, Sagar. How are you????";
   }
 
   @GetMapping("/private/hello")
