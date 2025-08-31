@@ -2,33 +2,43 @@ pipeline {
   agent any
 
   environment {
-    // make sure .env exists or set secrets here via Jenkins credentials bindings
-    // The .env in repo or created on EC2 will be used by docker compose
+    // Project workspace
     COMPOSE_PROJECT_DIR = "${WORKSPACE}"
+
+    // DB Settings
+    MYSQL_ROOT_PASSWORD = "admin123"
+    MYSQL_DATABASE      = "expense_recorder"
+
+    // App port exposed to your host
+    APP_PORT            = "9090"
   }
 
   stages {
     stage('Checkout') {
       steps {
-        // Use the Git SCM configured for your job; if using credentials, set them in job config
         checkout scm
       }
     }
 
     stage('Build JAR') {
       steps {
-        // run maven build; skip tests in pipeline run if you want, or run tests
         sh 'mvn -B clean package -DskipTests'
-        // verify jar file
         sh 'ls -l target | grep expense-app || true'
       }
     }
 
     stage('Docker Compose up') {
       steps {
-        // ensure previous containers removed (optional)
+        // Write .env file dynamically using Jenkins environment
+        sh '''
+          cat > .env <<EOF
+MYSQL_ROOT_PASSWORD=${MYSQL_ROOT_PASSWORD}
+MYSQL_DATABASE=${MYSQL_DATABASE}
+APP_PORT=${APP_PORT}
+EOF
+        '''
+        // restart stack
         sh 'docker compose down || true'
-        // build images and start containers detached
         sh 'docker compose up --build -d'
       }
     }
