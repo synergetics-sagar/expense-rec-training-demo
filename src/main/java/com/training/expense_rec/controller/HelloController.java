@@ -12,6 +12,11 @@ public class HelloController {
   public String publicHello() {
     return "Hello, world (public)";
   }
+  
+  @GetMapping("/public/akshata")
+  public String publicAkshata() {
+    return "Hello, Akshata";
+  }
 
   @GetMapping("/private/hello")
   public String privateHello() {
