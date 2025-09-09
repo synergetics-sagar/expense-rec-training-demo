@@ -39,9 +39,12 @@ public class AuthServiceImpl implements AuthService {
 	}
 	
 	public String login(LoginRequest request) {
+		System.out.println("|||||||||||AuthService.login()-1|||||||||||");
 		var authToken = new UsernamePasswordAuthenticationToken(request.email(), request.password());
 		authManager.authenticate(authToken);
 		var user = userRepository.findByEmail(request.email()).orElseThrow();
+		System.out.println("|||||||||||AuthService.login()-2|||||||||||");
+
 		return jwtService.generateToken(user.getUsername(), Map.of("role", user.getRole().name()));
 	}
 	

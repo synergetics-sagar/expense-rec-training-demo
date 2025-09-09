@@ -15,7 +15,7 @@ public class HelloController {
   
   @GetMapping("/public/sagar")
   public String publicSagar() {
-    return "Hello, Sagar. How are you????";
+    return "Hello, Sagar. How are you??";
   }
 
   @GetMapping("/private/hello")
